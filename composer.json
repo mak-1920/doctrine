@@ -35,5 +35,8 @@
         "psr-4": {
             "Port\\Doctrine\\Tests\\": "tests/"
         }
+    },
+    "require-dev": {
+        "doctrine/orm": "^2.11"
     }
 }
