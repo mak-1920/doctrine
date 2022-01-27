@@ -2,6 +2,11 @@
 
 namespace Port\Doctrine;
 
+use Doctrine\Inflector\CachedWordInflector;
+use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\NoopWordInflector;
+use Doctrine\Inflector\RulesetInflector;
+use Doctrine\Persistence\ObjectRepository;
 use Port\Doctrine\Exception\UnsupportedDatabaseTypeException;
 use Port\Writer;
 use Doctrine\Inflector\Inflector;
@@ -159,6 +164,8 @@ class DoctrineWriter implements Writer, Writer\FlushableWriter
         if (true === $this->truncate) {
             $this->truncateTable();
         }
+
+        return $this;
     }
 
     /**
@@ -231,7 +238,8 @@ class DoctrineWriter implements Writer, Writer\FlushableWriter
         $fieldNames = array_merge($this->objectMetadata->getFieldNames(), $this->objectMetadata->getAssociationNames());
         foreach ($fieldNames as $fieldName) {
             $value = null;
-            $classifiedFieldName = Inflector::classify($fieldName);
+            $inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
+            $classifiedFieldName = $inflector->classify($fieldName);
             if (isset($item[$fieldName])) {
                 $value = $item[$fieldName];
             }
